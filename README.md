@@ -69,23 +69,23 @@ In Docker, containers are often run using various command-line arguments (e.g., 
 
 • Make managing thousands of containers in production easier by having a clear "definition of how to run a container"
 
-  minikube start --memory=2048 --driver=hyperkit
+    minikube start --memory=2048 --driver=hyperkit
   
-  kubectl config get-clusters
+    kubectl config get-clusters
   
-  kibectl config view
+    kibectl config view
   
-  kubectl get pods -o wide
+    kubectl get pods -o wide
   
-  kubectl create -f pod.yml
+    kubectl create -f pod.yml
   
-  minikube ssh  or, cluster_IP_address ssh
+    minikube ssh  or, ssh -i node_name/IP address
   
-  curl IP_address
+    curl IP_address
   
-  kubectl logs nginx
+    kubectl logs nginx
   
-  kubectl describe pod nginx
+    kubectl describe pod nginx
   
 
 
