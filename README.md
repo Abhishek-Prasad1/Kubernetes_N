@@ -58,5 +58,24 @@ ensuring that the application remains highly available, fault tolerant, and high
 # Nodes
 A Kubernetes node is nothing but a physical machine or a virtual machine with Kubernetes components installed on top of it and connected to form a Kubernetes cluster.
 
+# Pod
+In Kubernetes, a Pod acts as a logical wrapper around one or more containers, serving as the smallest unit of deployment.
+
+In Docker, containers are often run using various command-line arguments (e.g., docker run -d -p...). The Pod wrapper replaces these manual commands with a declarative YAML file. This standardization allows DevOps engineers to:
+• Store specifications in git repositories for better version control.
+• Define all container requirements—such as image names, ports, and volume mounts—in a single, readable document.
+• Make managing thousands of containers in production easier by having a clear "definition of how to run a container"
+
+  minikube start --memory=2048 --driver=hyperkit
+  kubectl config get-clusters
+  kibectl config view
+  kubectl get pods -o wide
+  kubectl create -f pod.yml
+  minikube ssh  or, cluster_IP_address ssh
+  curl IP_address
+  kubectl logs nginx
+  kubectl describe pod nginx
+  
+
 
 
