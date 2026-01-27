@@ -86,7 +86,50 @@ In Docker, containers are often run using various command-line arguments (e.g., 
     kubectl logs nginx
   
     kubectl describe pod nginx
-  
+
+# Namespace: 
+A namespace in Kubernetes provides a layer of isolation within a cluster, allowing you to separate objects and resources into distinct logical groups
+
+Key characteristics of namespaces:
+Resource Scoping: Most Kubernetes resources (like Pods, Services, and Deployments) belong to a namespace. Resource names must be unique within a namespace, but can be reused across different namespaces without conflict.
+
+Isolation: Actions performed in one namespace do not affect resources in another. This prevents interference between different teams or environments sharing the same cluster.
+
+Access Control: Namespaces are a key building block for managing security and access. Role-Based Access Control (RBAC) policies can be applied at the namespace level, ensuring users or teams only have access to their designated resources.
+
+Resource Management: Administrators can use resource quotas to define and limit the aggregate CPU, memory, and storage consumption within a namespace, ensuring fair resource distribution and preventing a single project from monopolizing cluster resources.
+
+DNS Naming: Services within the same namespace can use short names to communicate. To communicate across namespaces, you must use the fully qualified domain name (FQDN) in the format <service-name>.<namespace-name>.svc.cluster.local
+
+Kubernetes begins with four namespaces:
+
+default: The namespace for objects that have no other namespace.
+
+kube-system: The namespace for Kubernetes-created objects.
+
+kube-public: This namespace is generated automatically and can be accessed by all users (including those not authenticated). This namespace is mostly reserved for cluster use, in case some resources need to be publicly visible and readable across the entire cluster. This namespace’s public aspect is merely a convention, not a requirement.
+
+kube-node-lease: This namespace contains Lease objects for each node. Node leases enable the kubelet to send heartbeats to the control plane, allowing it to detect node failure.
+
+# Namespaces are easily created with the command:
+
+$ kubectl create namespace <name>
+A YAML file, like any other Kubernetes resource, can be created and used to create a namespace:
+
+my-namespace.yaml: 
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: <insert-namespace-name-here>
+Then run:
+
+$ kubectl create -f my-namespace.yaml
+The command to display all namespaces in the cluster is:
+
+$ kubectl get namespace
+
+
 
 
 
