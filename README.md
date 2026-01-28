@@ -129,6 +129,23 @@ The command to display all namespaces in the cluster is:
 
 $ kubectl get namespace
 
+# Service: 
+In Kubernetes, a Service is a critical component that acts as a stable entry point for your applications. While a Deployment ensures your pods are running and auto-healing, a Service manages how those pods are accessed, solving the problem of ephemeral (temporary) IP addresses.
+The sources break down the importance and functionality of Services into three primary categories:
+1. Load Balancing
+When you have multiple replicas of a pod to handle high traffic, you cannot expect users to know which individual pod IP to hit. A Service acts as a load balancer that sits on top of your pods.
+• Traffic Distribution: It receives incoming requests and distributes them evenly across all available pod replicas.
+• Stable Interface: Instead of using shifting pod IPs, users access the application via a single service name (e.g., payment.default.svc) or a stable Service IP address.
+2. Service Discovery
+Because pods are ephemeral, they are frequently destroyed and recreated with new IP addresses. If you manually tracked these IPs, your connection would break every time a pod restarted.
+• Labels and Selectors: To solve this, Services do not track pods by IP addresses. Instead, they use a mechanism called labels and selectors.
+• Automatic Updates: A Service is configured to watch for pods with a specific label (e.g., app: payment). Even if a pod dies and a new one is created with a different IP, as long as it has the correct label, the Service will automatically discover it and send traffic to it.
+3. Exposing Applications (Service Types)
+A Service determines who can access your application based on its Type. The sources define three default types:
+• ClusterIP (Default): The application is only accessible inside the Kubernetes cluster. This is used for internal communication between services.
+• NodePort: This exposes the application on a specific port of each worker node's IP. It allows anyone with access to your internal network or VPC to reach the application.
+• LoadBalancer: This is used to expose the application to the external world (the internet). When used on a cloud provider like AWS, it triggers the creation of a public-facing Elastic Load Balancer (ELB) with a public IP address
+
 
 
 
