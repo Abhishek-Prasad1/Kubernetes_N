@@ -55,6 +55,64 @@ The master node (a.k.a. control plane) is the brain of the Kubernetescluster. It
 plane components take care of all the operational and administrative tasks. Worker nodes are the machine(s) where the actual application workloads (pods) run. They are responsible for running the containers and
 ensuring that the application remains highly available, fault tolerant, and highly scalable.
 
+# Control Plane Components
+
+<img width="1037" height="802" alt="image" src="https://github.com/user-attachments/assets/362802e0-cbfc-4dbc-b1c6-d759929a46d9" />
+
+-- API SERVER: It acts as the frontend for the Kubernetes control plane, and the client interacts with the cluster using API Server. It is responsible for validating and processing API requests, maintaining the desired state of the cluster, and handling Kubernetes resources such as pods, services, replication controllers, and others. API Server is the only control plane component that interacts with all other control plane components such as Scheduler, ETCD, Controller Manager, etc.
+
+-- Kube-Scheduler: The Scheduler in Kubernetes is a component responsible for scheduling workloads (such as pods) to the nodes in the cluster. It watches for newly created pods with no assigned node, selects an appropriate node for each
+pod, assigns a rank to the node, and then binds the pod to that node. The scheduler considers factors such as resource requirements, hardware/software constraints, affinity and anti-affinity specifications, labels and selectors, and
+other policies defined by the user or cluster administrator when making scheduling decisions.
+
+-- Controller Manager: The Controller Manager in Kubernetes is a component of the control plane that manages different types of controllers to regulate the state of the cluster and perform cluster-wide tasks. Each controller in the Controller Manager manages a specific aspect of the cluster's desired state, such as ReplicaSetController, DeploymentController, NamespaceController, NodeControllers, and others. These controllers continuously work to ensure that the current state of the cluster matches the desired state specified by users or applications. They monitor the cluster state through the Kubernetes API Server, detect any differences between the current and desired states, and take
+corrective actions to reconcile them, such as creating or deleting resources as needed. For instance, if a node becomes NotReady (Unhealthy), the NodeController takes the action of node repair and replaces it with a healthy node (if required).
+
+-- ETCD Server: ETCD is a distributed key-value storage used as the primary datastore in Kubernetes for storing cluster state and configuration information. It is a critical component of the Kubernetes control plane that is responsible
+for storing information such as cluster configuration, the state of all Kubernetes objects (such as pods, services, and replication controllers), and information about nodes in the cluster.
+
+-- CCM: In Kubernetes, the Cloud Controller Manager (CCM) is a control-plane component that lets Kubernetes talk to your cloud provider (AWS, Azure, GCP, etc.). It manages all the things that depend on cloud infrastructure, instead of hard-coding them into Kubernetes itself.
+It runs controllers that handle cloud-specific tasks, mainly:
+
+1️⃣ Node Controller
+
+Checks if nodes (VMs) are still alive
+
+If a VM is deleted in cloud (AWS EC2, Azure VM), it removes that node from the cluster
+
+2️⃣ Service Controller
+
+When you create a Service of type LoadBalancer:
+
+    kind: Service
+    spec:
+      type: LoadBalancer
+
+
+CCM asks the cloud provider to:
+
+Create a real load balancer (ELB / ALB / Azure LB / GCP LB)
+
+Attach it to your service
+
+Manage health checks
+
+3️⃣ Route Controller (some clouds)
+
+Sets up network routes between nodes
+
+Example: AWS VPC routes
+
+4️⃣ Volume Controller (older versions, now CSI handles this)
+
+Creates and attaches cloud disks:
+
+AWS EBS
+
+Azure Disk
+
+GCP Persistent Disk
+
 # Nodes
 A Kubernetes node is nothing but a physical machine or a virtual machine with Kubernetes components installed on top of it and connected to form a Kubernetes cluster.
 
@@ -128,6 +186,25 @@ $ kubectl create -f my-namespace.yaml
 The command to display all namespaces in the cluster is:
 
 $ kubectl get namespace
+
+#  Worker Node Components
+
+<img width="666" height="569" alt="image" src="https://github.com/user-attachments/assets/a5b1bbcd-7034-4ea0-8ba6-342f07cdacb4" />
+
+Kubelet: In Kubernetes, Kubelet is the primary node agent that runs on each node in the cluster. It is responsible for managing the containers running on the node and ensuring that they are healthy and running as expected.
+
+Some of the key responsibilities of Kubelet include
+1. Pod Lifecycle Management: Kubelet is responsible for starting, stopping, and maintaining containers within a pod as directed by the Kubernetes API Server.
+2. Node Monitoring: Kubelet monitors the health of the node and reports back to the Kubernetes control plane. If the node becomes unhealthy, the control plane can take corrective actions, such as rescheduling pods to other healthy nodes.
+3. Resource Management: Kubelet manages the node's resources (CPU, memory, disk, etc.) and enforces resource limits and requests specified in pod configurations.
+4. Volume Management: Kubelet manages pod volumes, including mounting and unmounting volumes as specified in the pod configuration.
+
+kube-proxy: In Kubernetes, kube-proxy is a network proxy that runs on each node in the cluster. It is responsible for implementing part of the Kubernetes service concept, which enables network communication to your pods from network clients inside or outside of your cluster. Basically, it makes sure your traffic reaches the right Pod.
+kube-proxy maintains network rules on each node. These network rules allow network communication to be forwarded to the appropriate pod based on IP address and port number.
+
+Container Runtime: In Kubernetes, a container runtime is the software responsible for running containers. It is an essential component of the Kubernetes architecture because Kubernetes itself does not run containers directly; instead, it relies on a container runtime to do so.
+
+Note Docker was the default container runtime for Kubernetes before Kubernetes version 1.24; however, the default container runtime has been changed to Containerd after 1.24 which is a CRI(container runtime interface) industry standard that provides a lightweight and reliable platform for managing containers.
 
 # Service: 
 In Kubernetes, a Service is a critical component that acts as a stable entry point for your applications. While a Deployment ensures your pods are running and auto-healing, a Service manages how those pods are accessed, solving the problem of ephemeral (temporary) IP addresses.
